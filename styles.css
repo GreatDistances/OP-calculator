@@ -22,9 +22,9 @@ body {
         "screen screen screen screen screen screen"
         "screen screen screen screen screen screen"
         "ac seven eight nine . ."
-        ". four five six multiplier divide"
+        ". four five six multiplier divider"
         ". one two three plus minus"
-        ". zero zerozero decimal plus equals";
+        ". zero zeroZero decimal plus equals";
 }
 
 .calc-container > .btn {
@@ -84,8 +84,8 @@ body {
 .multiplier {
     grid-area: multiplier;
 }
-.divide {
-    grid-area: divide;
+.divider {
+    grid-area: divider;
 }
 .equals {
     grid-area: equals;
@@ -121,8 +121,8 @@ body {
 .zero {
     grid-area: zero;
 }
-.zerozero {
-    grid-area: zerozero;
+.zeroZero {
+    grid-area: zeroZero;
 }
 .decimal {
     grid-area: decimal;
