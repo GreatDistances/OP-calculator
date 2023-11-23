@@ -65,17 +65,17 @@ const operate = (a, op, b) => {
 ac.addEventListener("click", () => {
   ac.style.backgroundColor = "#cd8c32";
   inProgress = false;
-  numsArr = [];
   runningTotal = 0;
   onScreen = "0";
   screen.textContent = onScreen;
-  console.log(numsArr);
   lastKeyed = "ac";
 });
 
 one.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "1";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "1";
   }
@@ -86,15 +86,20 @@ one.addEventListener("click", () => {
 two.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "2";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "2";
   }
   screen.textContent = onScreen;
   lastKeyed = 2;
 });
+
 three.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "3";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "3";
   }
@@ -104,6 +109,8 @@ three.addEventListener("click", () => {
 four.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "4";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "4";
   }
@@ -113,6 +120,8 @@ four.addEventListener("click", () => {
 five.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "5";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "5";
   }
@@ -122,6 +131,8 @@ five.addEventListener("click", () => {
 six.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "6";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "6";
   }
@@ -131,6 +142,8 @@ six.addEventListener("click", () => {
 seven.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "7";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "7";
   }
@@ -140,6 +153,8 @@ seven.addEventListener("click", () => {
 eight.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "8";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "8";
   }
@@ -149,6 +164,8 @@ eight.addEventListener("click", () => {
 nine.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "9";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "9";
     lastKeyed = 9;
@@ -158,6 +175,8 @@ nine.addEventListener("click", () => {
 zero.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "0";
+  } else if (onScreen.length > 12) {
+    return;
   } else {
     onScreen = onScreen + "0";
   }
@@ -167,6 +186,8 @@ zero.addEventListener("click", () => {
 zeroZero.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "0";
+  } else if (onScreen.length > 11) {
+    return;
   } else {
     onScreen = onScreen + "00";
   }
