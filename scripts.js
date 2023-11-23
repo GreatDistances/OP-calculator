@@ -35,15 +35,10 @@ const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
     console.log("DIV BY ZERO!");
-    screen.textContent = "DIV BY ZERO!";
     return null;
   }
   return a / b;
 }
-console.log(addFunc(6, 2));
-console.log(subtractFunc(6, 2));
-console.log(multiplyFunc(6, 2));
-console.log(divideFunc(6, 2));
 
 // operate function
 const operate = (a, op, b) => {
@@ -182,7 +177,7 @@ decimal.addEventListener("click", () => {
   lastKeyed = "decimal";
 });
 
-const operatorsRegex = /[-+*/]/;
+const operatorsRegex = /[-+*/=]/;
 
 plus.addEventListener("click", () => {
   if (operatorsRegex.test(lastKeyed)) {
@@ -247,6 +242,9 @@ divider.addEventListener("click", () => {
     runningTotal = Number(onScreen);
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
+      if (runningTotal === 6) {
+        console.log("DIV");
+      }
   }
   screen.textContent = String(runningTotal);
   onScreen = "";
@@ -261,7 +259,6 @@ const numsRegex = /[0-9]+/;
 equals.addEventListener("click", () => {
   // if lastKeyed is an operand, return.
   if (operatorsAndEqualsRegex.test(lastKeyed)) {
-    console.log("op");
     return;
   // if lastKeyed is a number, calculate and return runningTotal on screen.
   } else if (numsRegex.test(lastKeyed)) {
@@ -269,5 +266,6 @@ equals.addEventListener("click", () => {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
   screen.textContent = runningTotal;
-  lastKeyed = "equals";
+  onScreen = "";
+  lastKeyed = "=";
 });
