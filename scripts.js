@@ -34,13 +34,14 @@ const subtractFunc = (a, b) => a - b;
 const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
+    ac.style.backgroundColor = "#FF0000";
     return NaN;
   }
   return a / b;
 };
 
 const limitDigits = (num) => {
-  return Number(num.toPrecision(10));
+  return Number(num.toPrecision(12));
 }
 
 // operate function
@@ -62,6 +63,7 @@ const operate = (a, op, b) => {
 // calculator event listeners
 
 ac.addEventListener("click", () => {
+  ac.style.backgroundColor = "#cd8c32";
   inProgress = false;
   numsArr = [];
   runningTotal = 0;
@@ -191,8 +193,7 @@ plus.addEventListener("click", () => {
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
-  runningTotal = limitDigits(runningTotal);
-  screen.textContent = String(runningTotal);
+  screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
   inProgress = true;
   lastKeyed = "+";
@@ -209,8 +210,7 @@ minus.addEventListener("click", () => {
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
-  runningTotal = limitDigits(runningTotal);
-  screen.textContent = String(runningTotal);
+  screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
   inProgress = true;
   lastKeyed = "-";
@@ -227,8 +227,7 @@ multiplier.addEventListener("click", () => {
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
-  runningTotal = limitDigits(runningTotal);
-  screen.textContent = String(runningTotal);
+  screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
   inProgress = true;
   lastKeyed = "*";
@@ -245,8 +244,7 @@ divider.addEventListener("click", () => {
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
-  runningTotal = limitDigits(runningTotal);
-  screen.textContent = String(runningTotal);
+  screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
   inProgress = true;
   lastKeyed = "/";
@@ -265,8 +263,7 @@ equals.addEventListener("click", () => {
     console.log(lastKeyed);
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
-  runningTotal = limitDigits(runningTotal);
-  screen.textContent = runningTotal;
+  screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
   lastKeyed = "=";
 });
