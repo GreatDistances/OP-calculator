@@ -1,3 +1,7 @@
+let runningTotal;
+let lastKeyed;
+let inProgress = false;
+
 // basic math functions
 const addFunc = (a, b) => a + b;
 const subtractFunc = (a, b) => a - b;
@@ -10,23 +14,20 @@ console.log(multiplyFunc(6, 2));
 console.log(divideFunc(6, 2));
 
 // operate function
-const operate = (a, b, op) => {
-  return op === "+"
-    ? addFunc(a, b)
-    : op === "-"
-    ? subtractFunc(a, b)
-    : op === "*"
-    ? multiplyFunc(a, b)
-    : op === "/"
-    ? divideFunc(a, b)
-    : "error";
+const operate = (a, op, b) => {
+  switch (op) {
+    case "+":
+      return addFunc(a, b);
+    case "-":
+      return subtractFunc(a, b);
+    case "*":
+      return multiplyFunc(a, b);
+    case "/":
+      return divideFunc(a, b);
+    default:
+      return "error";
+  }
 };
-
-console.log(operate(6, 2, "+"));
-console.log(operate(6, 2, "-"));
-console.log(operate(6, 2, "*"));
-console.log(operate(6, 2, "/"));
-console.log(operate(6, 2, "asdf934"));
 
 // DOM elements
 const screen = document.querySelector(".screen");
@@ -55,10 +56,13 @@ let numsArr = [];
 screen.textContent = onScreen;
 
 ac.addEventListener("click", () => {
+  inProgress = false;
   numsArr = [];
+  runningTotal = 0;
   onScreen = "0";
   screen.textContent = onScreen;
   console.log(numsArr);
+  lastKeyed = "ac";
 });
 
 one.addEventListener("click", () => {
@@ -68,6 +72,7 @@ one.addEventListener("click", () => {
     onScreen = onScreen + "1";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 
 two.addEventListener("click", () => {
@@ -77,6 +82,7 @@ two.addEventListener("click", () => {
     onScreen = onScreen + "2";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 three.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -85,6 +91,7 @@ three.addEventListener("click", () => {
     onScreen = onScreen + "3";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 four.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -93,6 +100,7 @@ four.addEventListener("click", () => {
     onScreen = onScreen + "4";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 five.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -101,6 +109,7 @@ five.addEventListener("click", () => {
     onScreen = onScreen + "5";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 six.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -109,6 +118,7 @@ six.addEventListener("click", () => {
     onScreen = onScreen + "6";
   }
   screen.textContent = onScreen;
+  lastKeyed = 6;
 });
 seven.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -117,6 +127,7 @@ seven.addEventListener("click", () => {
     onScreen = onScreen + "7";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 eight.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -125,12 +136,14 @@ eight.addEventListener("click", () => {
     onScreen = onScreen + "8";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 nine.addEventListener("click", () => {
   if (onScreen == "0") {
     onScreen = "9";
   } else {
     onScreen = onScreen + "9";
+    lastKeyed = "num";
   }
   screen.textContent = onScreen;
 });
@@ -141,6 +154,7 @@ zero.addEventListener("click", () => {
     onScreen = onScreen + "0";
   }
   screen.textContent = onScreen;
+  lastKeyed = "num";
 });
 zeroZero.addEventListener("click", () => {
   if (onScreen == "0") {
@@ -155,39 +169,103 @@ decimal.addEventListener("click", () => {
     onScreen = onScreen + ".";
     screen.textContent = onScreen;
   }
+  lastKeyed = "decimal";
 });
 
+/*
+START WITH NUMBER:
+User clicks 4.
+    4 displays on screen.
+User clicks +.
+    4 (onScreen) added to array [0]
+    + added to array [1]
+    runningTotal evaluates to 4.
+User clicks 8
+    8 (onScreen) displays on screen.
+User clicks +
+    8 added to array [2]
+    runningTotal evaluates to 12 (4+8).
+User clicks 1
+    1 (onScreen) displays on screen.
+
+START WITH ZERO
+User clicks +.
+    0 (onScreen) added to array [0]
+    + added to array [1]
+    runningTotal evaluates to 0.
+User clicks 7
+    7 displays on screen.
+User clicks 9
+    79 displays on screen.
+User clicks +
+    79 (onScreen) added to array [2]
+    runningTotal evaluates to 79 (0 + 79).
+User clicks 1
+    1 (onScreen) displays on screen.
+
+
+
+
+
+*/
+
 plus.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "+");
-  screen.textContent = String(currentNum) + "+";
-  console.log(numsArr);
+  if (lastKeyed == "operand") {
+    return;
+  }
+  else if (inProgress == false) {
+    runningTotal = Number(onScreen);
+  } else {
+    runningTotal = operate(runningTotal, "+", Number(onScreen));
+  }
+  screen.textContent = String(runningTotal);
   onScreen = "";
+  inProgress = true;
+  lastKeyed = "operand";
 });
+
 minus.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "-");
-  screen.textContent = String(currentNum) + "-";
-  console.log(numsArr);
+  if (lastKeyed == "operand") {
+    return;
+  }
+  else if (inProgress == false) {
+    runningTotal = Number(onScreen);
+  } else {
+    runningTotal = subtractFunc(runningTotal, Number(onScreen));
+  }
+  screen.textContent = String(runningTotal);
   onScreen = "";
+  inProgress = true;
+  lastKeyed = "operand";
 });
+
 multiplier.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "*");
-  screen.textContent = String(currentNum) + "*";
-  console.log(numsArr);
+  if (lastKeyed == "operand") {
+    return;
+  }
+  else if (inProgress == false) {
+    runningTotal = Number(onScreen);
+  } else {
+    runningTotal = multiplyFunc(runningTotal, Number(onScreen));
+  }
+  screen.textContent = String(runningTotal);
   onScreen = "";
+  inProgress = true;
+  lastKeyed = "operand";
 });
+
 divider.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "/");
-  screen.textContent = String(currentNum) + "/";
-  console.log(numsArr);
+  if (lastKeyed == "operand") {
+    return;
+  } else if (inProgress == false) {
+    runningTotal = Number(onScreen);
+  } else {
+    runningTotal = divideFunc(runningTotal, Number(onScreen));
+  }
+  screen.textContent = String(runningTotal);
   onScreen = "";
+  inProgress = true;
+  lastKeyed = "operand";
 });
 
 equals.addEventListener("click", () => {
@@ -216,5 +294,5 @@ equals.addEventListener("click", () => {
   }
   onScreen = total;
   console.log(`grand total: ${total}, numsArr ${numsArr}`);
-  screen.textContent = `= ${total.toFixed(10)}`; 
+  screen.textContent = `= ${total.toFixed(8)}`;
 });
