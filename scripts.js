@@ -34,10 +34,13 @@ const subtractFunc = (a, b) => a - b;
 const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
-    console.log("DIV BY ZERO!");
-    return null;
+    return NaN;
   }
   return a / b;
+};
+
+const limitDigits = (num) => {
+  return Number(num.toPrecision(10));
 }
 
 // operate function
@@ -55,7 +58,6 @@ const operate = (a, op, b) => {
       return "error";
   }
 };
-
 
 // calculator event listeners
 
@@ -184,12 +186,12 @@ plus.addEventListener("click", () => {
     lastKeyed = "+";
     lastKeyedOp = lastKeyed;
     return;
-  }
-  else if (inProgress == false) {
+  } else if (inProgress == false) {
     runningTotal = Number(onScreen);
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
+  runningTotal = limitDigits(runningTotal);
   screen.textContent = String(runningTotal);
   onScreen = "";
   inProgress = true;
@@ -202,12 +204,12 @@ minus.addEventListener("click", () => {
     lastKeyed = "-";
     lastKeyedOp = lastKeyed;
     return;
-  }
-  else if (inProgress == false) {
+  } else if (inProgress == false) {
     runningTotal = Number(onScreen);
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
+  runningTotal = limitDigits(runningTotal);
   screen.textContent = String(runningTotal);
   onScreen = "";
   inProgress = true;
@@ -220,12 +222,12 @@ multiplier.addEventListener("click", () => {
     lastKeyed = "*";
     lastKeyedOp = lastKeyed;
     return;
-  }
-  else if (inProgress == false) {
+  } else if (inProgress == false) {
     runningTotal = Number(onScreen);
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
+  runningTotal = limitDigits(runningTotal);
   screen.textContent = String(runningTotal);
   onScreen = "";
   inProgress = true;
@@ -242,10 +244,8 @@ divider.addEventListener("click", () => {
     runningTotal = Number(onScreen);
   } else {
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-      if (runningTotal === 6) {
-        console.log("DIV");
-      }
   }
+  runningTotal = limitDigits(runningTotal);
   screen.textContent = String(runningTotal);
   onScreen = "";
   inProgress = true;
@@ -260,11 +260,12 @@ equals.addEventListener("click", () => {
   // if lastKeyed is an operand, return.
   if (operatorsAndEqualsRegex.test(lastKeyed)) {
     return;
-  // if lastKeyed is a number, calculate and return runningTotal on screen.
+    // if lastKeyed is a number, calculate and return runningTotal on screen.
   } else if (numsRegex.test(lastKeyed)) {
     console.log(lastKeyed);
     runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   }
+  runningTotal = limitDigits(runningTotal);
   screen.textContent = runningTotal;
   onScreen = "";
   lastKeyed = "=";
