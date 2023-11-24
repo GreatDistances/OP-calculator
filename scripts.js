@@ -18,6 +18,7 @@ const multiplier = document.querySelector(".multiplier");
 const divider = document.querySelector(".divider");
 const ac = document.querySelector(".ac");
 const equals = document.querySelector(".equals");
+const negative = document.querySelector(".negative");
 
 // screen display variable
 let onScreen = "0";
@@ -42,7 +43,7 @@ const divideFunc = (a, b) => {
 
 const limitDigits = (num) => {
   return Number(num.toPrecision(12));
-}
+};
 
 // operate function
 const operate = (a, op, b) => {
@@ -63,7 +64,7 @@ const operate = (a, op, b) => {
 const clearRunningTotal = () => {
   runningTotal = 0;
   inProgress = false;
-}
+};
 
 const keyedNumber = (num) => {
   if (lastKeyedOp == "=") {
@@ -78,7 +79,7 @@ const keyedNumber = (num) => {
   }
   screen.textContent = onScreen;
   lastKeyed = "num";
-}
+};
 
 // calculator event listeners
 
@@ -153,7 +154,6 @@ zeroZero.addEventListener("click", () => {
     onScreen = onScreen + "00";
   }
   screen.textContent = onScreen;
-
 });
 decimal.addEventListener("click", () => {
   if (Number(onScreen) === 0) {
@@ -165,6 +165,13 @@ decimal.addEventListener("click", () => {
     screen.textContent = onScreen;
   }
   lastKeyed = "decimal";
+});
+
+negative.addEventListener("click", () => {
+  if (Number(onScreen) !== 0) {
+    onScreen = Number(onScreen) * -1;
+    screen.textContent = String(limitDigits(onScreen));
+  }
 });
 
 const operatorsRegex = /[-+*/=]/;
