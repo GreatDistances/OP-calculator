@@ -21,7 +21,7 @@ body {
     grid-template-areas:
         "screen screen screen screen screen"
         "screen screen screen screen screen"
-        "seven eight nine ac ac"
+        "seven eight nine negative ac"
         "four five six multiplier divider"
         "one two three plus minus"
         "zero zeroZero decimal plus equals";

@@ -34,7 +34,7 @@ const subtractFunc = (a, b) => a - b;
 const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
-    ac.style.backgroundColor = "#FF0000";
+    ac.style.backgroundColor = "#cd3f32";
     return NaN;
   }
   return a / b;
@@ -60,6 +60,26 @@ const operate = (a, op, b) => {
   }
 };
 
+const clearRunningTotal = () => {
+  runningTotal = 0;
+  inProgress = false;
+}
+
+const keyedNumber = (num) => {
+  if (lastKeyedOp == "=") {
+    clearRunningTotal();
+  }
+  if (onScreen == "0") {
+    onScreen = num;
+  } else if (onScreen.length > 12) {
+    return;
+  } else {
+    onScreen = onScreen + num;
+  }
+  screen.textContent = onScreen;
+  lastKeyed = "num";
+}
+
 // calculator event listeners
 
 ac.addEventListener("click", () => {
@@ -72,118 +92,59 @@ ac.addEventListener("click", () => {
 });
 
 one.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "1";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "1";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 1;
+  let thisNum = "1";
+  keyedNumber(thisNum);
 });
 
 two.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "2";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "2";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 2;
+  let thisNum = "2";
+  keyedNumber(thisNum);
 });
 
 three.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "3";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "3";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 3;
+  let thisNum = "3";
+  keyedNumber(thisNum);
 });
+
 four.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "4";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "4";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 4;
+  let thisNum = "4";
+  keyedNumber(thisNum);
 });
+
 five.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "5";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "5";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 5;
+  let thisNum = "5";
+  keyedNumber(thisNum);
 });
+
 six.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "6";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "6";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 6;
+  let thisNum = "6";
+  keyedNumber(thisNum);
 });
+
 seven.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "7";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "7";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 7;
+  let thisNum = "7";
+  keyedNumber(thisNum);
 });
+
 eight.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "8";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "8";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 8;
+  let thisNum = "8";
+  keyedNumber(thisNum);
 });
+
 nine.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "9";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "9";
-    lastKeyed = 9;
-  }
-  screen.textContent = onScreen;
+  let thisNum = "9";
+  keyedNumber(thisNum);
 });
+
 zero.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "0";
-  } else if (onScreen.length > 12) {
-    return;
-  } else {
-    onScreen = onScreen + "0";
-  }
-  screen.textContent = onScreen;
-  lastKeyed = 0;
+  let thisNum = "0";
+  keyedNumber(thisNum);
 });
+
 zeroZero.addEventListener("click", () => {
+  if (lastKeyedOp == "=") {
+    clearRunningTotal();
+  }
   if (onScreen == "0") {
     onScreen = "0";
   } else if (onScreen.length > 11) {
@@ -192,9 +153,13 @@ zeroZero.addEventListener("click", () => {
     onScreen = onScreen + "00";
   }
   screen.textContent = onScreen;
-  lastKeyed = 0o0;
+
 });
 decimal.addEventListener("click", () => {
+  if (Number(onScreen) === 0) {
+    onScreen = "0.";
+    screen.textContent = onScreen;
+  }
   if (onScreen.indexOf(".") === -1) {
     onScreen = onScreen + ".";
     screen.textContent = onScreen;
@@ -276,15 +241,10 @@ const operatorsAndEqualsRegex = /[-+*/=]/;
 const numsRegex = /[0-9]+/;
 
 equals.addEventListener("click", () => {
-  // if lastKeyed is an operand, return.
-  if (operatorsAndEqualsRegex.test(lastKeyed)) {
-    return;
-    // if lastKeyed is a number, calculate and return runningTotal on screen.
-  } else if (numsRegex.test(lastKeyed)) {
-    console.log(lastKeyed);
-    runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-  }
+  // Calculate and return runningTotal on the screen.
+  runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
   screen.textContent = String(limitDigits(runningTotal));
   onScreen = "";
-  lastKeyed = "=";
+  lastKeyedOp = "=";
+  lastKeyed = lastKeyedOp;
 });
