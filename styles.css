@@ -27,6 +27,7 @@ body {
     box-shadow: 10px 10px 20px #333;
     grid-template-areas:
         "screen screen screen screen screen screen"
+        "screen screen screen screen screen screen"
         "ac seven eight nine percentage ."
         "negative four five six multiplier divider"
         "backspace one two three plus minus"
@@ -55,19 +56,35 @@ body {
 
 .screen {
     box-sizing: border-box;
-    display: flex;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-items: center;
-    justify-content: right;
-    height: 80px;
-    padding-right: 20px;
+    justify-content: flex-end;
+    padding-right: 10px;
     margin-bottom: 10px;
     background-image: linear-gradient(#222, #444);
     grid-area: screen;
     border: 2px solid #222;
     border-radius: 5px;
+    height: 120px;
     font-size: 40px;
     color: #EEE;
     box-shadow: inset 0px 0px 5px 0px #AAA;
+}
+
+.screen-previous,
+.screen-current {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 20px;
+    font-size: 40px;
+    color: #EEE;
+}
+
+.screen-previous {
+    font-size: 15px;
 }
 
 .num {

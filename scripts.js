@@ -1,37 +1,132 @@
 // DOM elements
-const screen = document.querySelector(".screen");
-const one = document.querySelector(".one");
-const two = document.querySelector(".two");
-const three = document.querySelector(".three");
-const four = document.querySelector(".four");
-const five = document.querySelector(".five");
-const six = document.querySelector(".six");
-const seven = document.querySelector(".seven");
-const eight = document.querySelector(".eight");
-const nine = document.querySelector(".nine");
-const zero = document.querySelector(".zero");
-const zeroZero = document.querySelector(".zeroZero");
-const decimal = document.querySelector(".decimal");
-const plus = document.querySelector(".plus");
-const minus = document.querySelector(".minus");
-const multiplier = document.querySelector(".multiplier");
-const divider = document.querySelector(".divider");
-const ac = document.querySelector(".ac");
+
+const numButtons = document.querySelectorAll(".num");
+const screenCurrent = document.querySelector(".screen-current");
+const screenPrevious = document.querySelector(".screen-previous");
+const operators = document.querySelectorAll(".op");
 const equals = document.querySelector(".equals");
+const ac = document.querySelector(".ac");
 const negative = document.querySelector(".negative");
 const c = document.querySelector(".c");
 const backspace = document.querySelector(".backspace");
 
-// screen display variable
-let onScreen = "0";
-screen.textContent = onScreen;
+// global variables
+let currentNum = 0;
+let prevNum = 0;
+let currentNumDisplay = "";
+let prevNumDisplay = "";
+let currentOp = "";
+let prevOp = "";
+let lastKeyed = "";
 
-let runningTotal;
-let lastKeyed;
-let lastKeyedOp;
-let inProgress = false;
+const clearAll = () => {
+  currentNum = 0;
+  prevNum = 0;
+  currentOp = "";
+  prevOp = "";
+  lastKeyed = "";
+  screenCurrent.textContent = currentNum;
+  screenPrevious.textContent = prevNum;
+};
 
-const operatorsRegex = /[-+*/=]/;
+clearAll(); // reset calculator on load
+
+numButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    console.log(button.innerText);
+    let entry = button.innerText;
+    lastKeyed = "num";
+    appendCurrentNumDisplay(entry);
+  });
+});
+
+operators.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentOp = button.innerText;
+    console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+    console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+    // first calculation acts differently from subsequent calculations
+    if (prevOp === "") {
+      prevNum = currentNum;
+      updatePrevNumDisplay(currentNum, currentOp);
+      updateCurrentNumDisplay(currentNum);
+      currentNum = 0;
+      prevOp = currentOp;
+      // allows switching of operator
+    } else if (lastKeyed === "op") {
+      prevOp = currentOp;
+      currentOp = button.innerText;
+      updatePrevNumDisplay(prevNum, currentOp);
+      return;
+    } else {
+      calculate(currentNum, prevOp, prevNum);
+      updatePrevNumDisplay(prevNum, currentOp);
+      updateCurrentNumDisplay(currentNum);
+      prevOp = currentOp;
+    }
+    lastKeyed = "op";
+  });
+});
+
+backspace.addEventListener("click", () => {
+  deleteOneChar();
+  lastKeyed = "num";
+});
+
+ac.addEventListener("click", () => {
+  clearAll();
+});
+
+const appendCurrentNumDisplay = (num) => {
+  if (currentNum === 0) {
+    currentNum = num;
+  } else if (num === "." && currentNum.includes(".")) {
+    return;
+  } else {
+    currentNum = currentNum + num;
+  }
+  updateCurrentNumDisplay(currentNum);
+};
+
+const updateCurrentNumDisplay = (num) => {
+  screenCurrent.textContent = num;
+};
+
+const updatePrevNumDisplay = (num, op) => {
+  screenPrevious.textContent = `${num} ${op}`;
+};
+
+const calculate = (current, op, prev) => {
+  switch (op) {
+    case "+":
+      prevNum =
+        prev === null
+          ? current
+          : addFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "-":
+      prevNum =
+        prev === null
+          ? current
+          : subtractFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "x":
+      prevNum =
+        prev === null
+          ? current
+          : multiplyFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "/":
+      prevNum =
+        prev === null
+          ? current
+          : divideFunc(parseFloat(prev), parseFloat(current));
+      break;
+    default:
+      return;
+  }
+  currentNum = 0;
+};
 
 // basic math functions
 const addFunc = (a, b) => a + b;
@@ -44,6 +139,27 @@ const divideFunc = (a, b) => {
     return NaN;
   }
   return a / b;
+};
+
+negative.addEventListener("click", () => {
+  currentNum = parseFloat(currentNum) * -1;
+  updateCurrentNumDisplay(currentNum);
+});
+
+const deleteOneChar = () => {
+  // convert currentNum to string
+  let currentNumAsString = currentNum.toString();
+  // if currentNum is 0, return.
+  if (currentNum === 0) {
+    return;
+    // if currentNum is only one character long, currentNum becomes 0.
+  } else if (currentNumAsString.length === 1) {
+    currentNum = 0;
+  } else {
+    // remove last char from currentNum
+    currentNum = currentNumAsString.slice(0, -1);
+  }
+  updateCurrentNumDisplay(currentNum);
 };
 
 const limitDigits = (num) => {
@@ -72,224 +188,3 @@ const limitDigits = (num) => {
 };
 
 // operate function
-const operate = (a, op, b) => {
-  switch (op) {
-    case "+":
-      return addFunc(a, b);
-    case "-":
-      return subtractFunc(a, b);
-    case "*":
-      return multiplyFunc(a, b);
-    case "/":
-      return divideFunc(a, b);
-    default:
-      return "error";
-  }
-};
-
-// Function for starting a fresh calculation if a number key is pressed immediately after = button
-const clearRunningTotal = () => {
-  runningTotal = 0;
-  inProgress = false;
-};
-
-const keyedNumber = (num) => {
-  if (lastKeyedOp == "=") {
-    clearRunningTotal();
-  }
-  if (onScreen == "0") {
-    onScreen = num;
-  } else if (onScreen.length >= 11) {
-    return;
-  } else {
-    onScreen = onScreen + num;
-  }
-  screen.textContent = onScreen;
-  lastKeyed = "num";
-};
-
-// calculator event listeners
-
-ac.addEventListener("click", () => {
-  ac.style.backgroundColor = "#cd8c32";
-  inProgress = false;
-  runningTotal = 0;
-  onScreen = "0";
-  screen.textContent = onScreen;
-  lastKeyed = "ac";
-  screen.style.border = "2px solid #222";
-});
-
-backspace.addEventListener("click", () => {
-
-  if (operatorsRegex.test(lastKeyed)) {
-    runningTotal = runningTotal.toString();
-    if (runningTotal.length < 2) {
-      runningTotal = 0;
-    }
-    else if (runningTotal.charAt(runningTotal.length - 2) === ".") {
-      runningTotal = runningTotal.slice(0, -2);
-    } else {
-      runningTotal = runningTotal.slice(0, -1);
-    }
-    screen.textContent = runningTotal;
-
-  } else if (lastKeyed === "num") {
-    if (onScreen.length < 2) {
-      onScreen = 0;
-    } else {
-      if (onScreen.charAt(onScreen.length - 2) === ".") {
-        onScreen = onScreen.slice(0, -2);
-      } else {
-        onScreen = onScreen.slice(0, -1);
-      }
-    }
-  screen.textContent = onScreen;
-}
-});
-
-c.addEventListener("click", () => {
-  if (operatorsRegex.test(lastKeyed)) {
-    runningTotal = 0;
-    screen.textContent = runningTotal;
-  } else if (lastKeyed === "num") {
-    onScreen = 0;
-    screen.textContent = onScreen;
-  }
-});
-
-negative.addEventListener("click", () => {
-  if (operatorsRegex.test(lastKeyed)) {
-    runningTotal *= -1;
-    onScreen *= -1;
-    screen.textContent = String(limitDigits(runningTotal));
-  } else if (lastKeyed === "num") {
-    onScreen *= -1;
-    screen.textContent = String(limitDigits(onScreen));
-  }
-});
-
-equals.addEventListener("click", () => {
-  if (lastKeyedOp === "=") {
-    return;
-  }
-  // Calculate and return runningTotal on the screen.
-  runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-  screen.textContent = String(limitDigits(runningTotal));
-  onScreen = "";
-  inProgress = true;
-  lastKeyedOp = "=";
-  lastKeyed = lastKeyedOp;
-});
-
-const operatorChecks = (op) => {
-  if (operatorsRegex.test(lastKeyed)) {
-    lastKeyed = op;
-    lastKeyedOp = lastKeyed;
-    return;
-  } else if (inProgress == false) {
-    runningTotal = Number(onScreen);
-  } else {
-    runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-  }
-  screen.textContent = String(limitDigits(runningTotal));
-  onScreen = "";
-  inProgress = true;
-  lastKeyed = op;
-  lastKeyedOp = lastKeyed;
-};
-
-plus.addEventListener("click", () => {
-  let operator = "+";
-  operatorChecks(operator);
-});
-
-minus.addEventListener("click", () => {
-  let operator = "-";
-  operatorChecks(operator);
-});
-
-multiplier.addEventListener("click", () => {
-  let operator = "*";
-  operatorChecks(operator);
-});
-
-divider.addEventListener("click", () => {
-  let operator = "/";
-  operatorChecks(operator);
-});
-
-one.addEventListener("click", () => {
-  let thisNum = "1";
-  keyedNumber(thisNum);
-});
-
-two.addEventListener("click", () => {
-  let thisNum = "2";
-  keyedNumber(thisNum);
-});
-
-three.addEventListener("click", () => {
-  let thisNum = "3";
-  keyedNumber(thisNum);
-});
-
-four.addEventListener("click", () => {
-  let thisNum = "4";
-  keyedNumber(thisNum);
-});
-
-five.addEventListener("click", () => {
-  let thisNum = "5";
-  keyedNumber(thisNum);
-});
-
-six.addEventListener("click", () => {
-  let thisNum = "6";
-  keyedNumber(thisNum);
-});
-
-seven.addEventListener("click", () => {
-  let thisNum = "7";
-  keyedNumber(thisNum);
-});
-
-eight.addEventListener("click", () => {
-  let thisNum = "8";
-  keyedNumber(thisNum);
-});
-
-nine.addEventListener("click", () => {
-  let thisNum = "9";
-  keyedNumber(thisNum);
-});
-
-zero.addEventListener("click", () => {
-  let thisNum = "0";
-  keyedNumber(thisNum);
-});
-
-zeroZero.addEventListener("click", () => {
-  if (lastKeyedOp == "=") {
-    clearRunningTotal();
-  }
-  if (onScreen == "0") {
-    onScreen = "0";
-  } else if (onScreen.length > 11) {
-    return;
-  } else {
-    onScreen = onScreen + "00";
-  }
-  screen.textContent = onScreen;
-});
-decimal.addEventListener("click", () => {
-  if (Number(onScreen) === 0) {
-    onScreen = "0.";
-    screen.textContent = onScreen;
-  }
-  if (onScreen.indexOf(".") === -1) {
-    onScreen = onScreen + ".";
-    screen.textContent = onScreen;
-  }
-  lastKeyed = "decimal";
-});
