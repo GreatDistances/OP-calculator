@@ -1,7 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     height: 100vh;
     background-image: linear-gradient(#cd3299, #6632cd);
     font-family: Trirong, sans-serif;
+    padding: 2em;
 }
 
 .calc-container {
@@ -11,7 +18,7 @@ body {
     grid-auto-rows: minmax(50px, auto);
     column-gap: 10px;
     row-gap: 10px;
-    width: 480px; /* smartphone max width */
+    width: 440px; /* smartphone max width */
     margin: 0 auto; /* center the calculator on screen */
     border: 2px solid grey;
     border-radius: 10px;
@@ -126,4 +133,22 @@ body {
 }
 .decimal {
     grid-area: decimal;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    color: #EEE;
+    text-decoration: none;
+}
+
+.github-svg {
+    width: 30px;
+    height: auto;
+}
+
+.footer-link {
+    text-decoration: none;
 }
