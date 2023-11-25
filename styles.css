@@ -14,24 +14,23 @@ body {
 .calc-container {
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-auto-rows: minmax(50px, auto);
-    column-gap: 10px;
-    row-gap: 10px;
+    column-gap: 11px;
+    row-gap: 11px;
     width: 440px; /* smartphone max width */
     margin: 0 auto; /* center the calculator on screen */
     border: 2px solid grey;
     border-radius: 10px;
     padding: 30px;
-    background-color: #EEE;
-    box-shadow: 2px 2px 2px #333;
+    background-image: linear-gradient(0deg,#DDD, #FFF);
+    box-shadow: 10px 10px 20px #333;
     grid-template-areas:
-        "screen screen screen screen screen"
-        "screen screen screen screen screen"
-        "seven eight nine negative ac"
-        "four five six multiplier divider"
-        "one two three plus minus"
-        "zero zeroZero decimal plus equals";
+        "screen screen screen screen screen screen"
+        "ac seven eight nine percentage ."
+        "negative four five six multiplier divider"
+        "backspace one two three plus minus"
+        "c zero zeroZero decimal plus equals";
 }
 
 .calc-container > .btn {
@@ -39,10 +38,10 @@ body {
     align-items: center;
     justify-content: center;
     color: #222;
-    font-size: 20px;
+
     font-weight: bold;
     border-radius: 5px;
-    box-shadow: 2px 2px 2px grey;
+    box-shadow: 2px 2px 2px #555555;
     user-select: none;
 }
 
@@ -59,27 +58,35 @@ body {
     display: flex;
     align-items: center;
     justify-content: right;
-    height: 90px;
+    height: 80px;
     padding-right: 20px;
+    margin-bottom: 10px;
     background-image: linear-gradient(#222, #444);
     grid-area: screen;
     border: 2px solid #222;
     border-radius: 5px;
     font-size: 40px;
     color: #EEE;
+    box-shadow: inset 0px 0px 5px 0px #AAA;
 }
 
 .num {
-    background-color: #CCC;
+    background-color: #BBB;
+    font-size: 22px;
 }
 
 .op {
-    background-color: #999;
+    background-color: #888;
+    font-size: 22px;
 }
 
 .ac {
     grid-area: ac;
     background-color: #cd8c32;
+    font-size: 22px;
+}
+.c {
+    grid-area: c;
 }
 
 .plus {
@@ -133,6 +140,12 @@ body {
 }
 .decimal {
     grid-area: decimal;
+}
+.negative {
+    grid-area: negative;
+}
+.backspace {
+    grid-area: backspace;
 }
 
 .footer {

@@ -19,6 +19,8 @@ const divider = document.querySelector(".divider");
 const ac = document.querySelector(".ac");
 const equals = document.querySelector(".equals");
 const negative = document.querySelector(".negative");
+const c = document.querySelector(".c");
+const backspace = document.querySelector(".backspace");
 
 // screen display variable
 let onScreen = "0";
@@ -38,6 +40,7 @@ const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
     ac.style.backgroundColor = "#cd3f32";
+    screen.style.border = "5px solid #cd3f32";
     return NaN;
   }
   return a / b;
@@ -114,6 +117,106 @@ ac.addEventListener("click", () => {
   onScreen = "0";
   screen.textContent = onScreen;
   lastKeyed = "ac";
+  screen.style.border = "2px solid #222";
+});
+
+backspace.addEventListener("click", () => {
+
+  if (operatorsRegex.test(lastKeyed)) {
+    runningTotal = runningTotal.toString();
+    if (runningTotal.length < 2) {
+      runningTotal = 0;
+    }
+    else if (runningTotal.charAt(runningTotal.length - 2) === ".") {
+      runningTotal = runningTotal.slice(0, -2);
+    } else {
+      runningTotal = runningTotal.slice(0, -1);
+    }
+    screen.textContent = runningTotal;
+
+  } else if (lastKeyed === "num") {
+    if (onScreen.length < 2) {
+      onScreen = 0;
+    } else {
+      if (onScreen.charAt(onScreen.length - 2) === ".") {
+        onScreen = onScreen.slice(0, -2);
+      } else {
+        onScreen = onScreen.slice(0, -1);
+      }
+    }
+  screen.textContent = onScreen;
+}
+});
+
+c.addEventListener("click", () => {
+  if (operatorsRegex.test(lastKeyed)) {
+    runningTotal = 0;
+    screen.textContent = runningTotal;
+  } else if (lastKeyed === "num") {
+    onScreen = 0;
+    screen.textContent = onScreen;
+  }
+});
+
+negative.addEventListener("click", () => {
+  if (operatorsRegex.test(lastKeyed)) {
+    runningTotal *= -1;
+    onScreen *= -1;
+    screen.textContent = String(limitDigits(runningTotal));
+  } else if (lastKeyed === "num") {
+    onScreen *= -1;
+    screen.textContent = String(limitDigits(onScreen));
+  }
+});
+
+equals.addEventListener("click", () => {
+  if (lastKeyedOp === "=") {
+    return;
+  }
+  // Calculate and return runningTotal on the screen.
+  runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
+  screen.textContent = String(limitDigits(runningTotal));
+  onScreen = "";
+  inProgress = true;
+  lastKeyedOp = "=";
+  lastKeyed = lastKeyedOp;
+});
+
+const operatorChecks = (op) => {
+  if (operatorsRegex.test(lastKeyed)) {
+    lastKeyed = op;
+    lastKeyedOp = lastKeyed;
+    return;
+  } else if (inProgress == false) {
+    runningTotal = Number(onScreen);
+  } else {
+    runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
+  }
+  screen.textContent = String(limitDigits(runningTotal));
+  onScreen = "";
+  inProgress = true;
+  lastKeyed = op;
+  lastKeyedOp = lastKeyed;
+};
+
+plus.addEventListener("click", () => {
+  let operator = "+";
+  operatorChecks(operator);
+});
+
+minus.addEventListener("click", () => {
+  let operator = "-";
+  operatorChecks(operator);
+});
+
+multiplier.addEventListener("click", () => {
+  let operator = "*";
+  operatorChecks(operator);
+});
+
+divider.addEventListener("click", () => {
+  let operator = "/";
+  operatorChecks(operator);
 });
 
 one.addEventListener("click", () => {
@@ -189,64 +292,4 @@ decimal.addEventListener("click", () => {
     screen.textContent = onScreen;
   }
   lastKeyed = "decimal";
-});
-
-negative.addEventListener("click", () => {
-    if (operatorsRegex.test(lastKeyed)) {
-      runningTotal *= -1;
-      screen.textContent = String(limitDigits(runningTotal));
-    } else if (lastKeyed === "num") {
-      onScreen *= -1;
-      screen.textContent = String(limitDigits(onScreen));
-    }
-});
-
-const operatorChecks = (op) => {
-  if (operatorsRegex.test(lastKeyed)) {
-    lastKeyed = op;
-    lastKeyedOp = lastKeyed;
-    return;
-  } else if (inProgress == false) {
-    runningTotal = Number(onScreen);
-  } else {
-    runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-  }
-  screen.textContent = String(limitDigits(runningTotal));
-  onScreen = "";
-  inProgress = true;
-  lastKeyed = op;
-  lastKeyedOp = lastKeyed;
-}
-
-plus.addEventListener("click", () => {
-  let operator = "+";
-  operatorChecks(operator);
-});
-
-minus.addEventListener("click", () => {
-  let operator = "-";
-  operatorChecks(operator);
-});
-
-multiplier.addEventListener("click", () => {
-  let operator = "*";
-  operatorChecks(operator);
-});
-
-divider.addEventListener("click", () => {
-  let operator = "/";
-  operatorChecks(operator);
-});
-
-equals.addEventListener("click", () => {
-  if (lastKeyedOp === "=") {
-    return;
-  }
-  // Calculate and return runningTotal on the screen.
-  runningTotal = operate(runningTotal, lastKeyedOp, Number(onScreen));
-  screen.textContent = String(limitDigits(runningTotal));
-  onScreen = "";
-  inProgress = true;
-  lastKeyedOp = "=";
-  lastKeyed = lastKeyedOp;
 });
