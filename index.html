@@ -1,37 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Trirong"
+    />
     <title>Calculator</title>
-</head>
-<body>
+  </head>
+  <body>
     <main>
-        <div class="calc-container">
-            <div class="screen"></div>
-            <div class="btn num one">1</div>
-            <div class="btn num two">2</div>
-            <div class="btn num three">3</div>
-            <div class="btn num four">4</div>
-            <div class="btn num five">5</div>
-            <div class="btn num six">6</div>
-            <div class="btn num seven">7</div>
-            <div class="btn num eight">8</div>
-            <div class="btn num nine">9</div>
-            <div class="btn num zero">0</div>
-            <div class="btn num zeroZero">00</div>
-            <div class="btn num decimal">.</div>
-            <div class="btn op plus">+</div>
-            <div class="btn op minus">-</div>
-            <div class="btn op multiplier">x</div>
-            <div class="btn op divider">/</div>
-            <div class="btn op equals">=</div>
-            <div class="btn ac">AC</div>
+      <div class="calc-container">
+        <div class="screen">
+          <div class="screen-previous"></div>
+          <div class="screen-current"></div>
         </div>
-
+        <div class="btn num one">1</div>
+        <div class="btn num two">2</div>
+        <div class="btn num three">3</div>
+        <div class="btn num four">4</div>
+        <div class="btn num five">5</div>
+        <div class="btn num six">6</div>
+        <div class="btn num seven">7</div>
+        <div class="btn num eight">8</div>
+        <div class="btn num nine">9</div>
+        <div class="btn num zero">0</div>
+        <div class="btn num zeroZero">00</div>
+        <div class="btn num decimal">.</div>
+        <div class="btn op plus">+</div>
+        <div class="btn op minus">-</div>
+        <div class="btn op multiplier">x</div>
+        <div class="btn op divider">/</div>
+        <div class="btn negative">+/-</div>
+        <div class="btn equals">=</div>
+        <div class="btn change c">C</div>
+        <div class="btn change ac">AC</div>
+        <div class="btn change backspace">></div>
+        <div class="solar-panel"></div>
+      </div>
     </main>
+    <a class="footer-link" href="https://github.com/GreatDistances"
+      ><p class="footer">
+        © 2023, Matthew P. Wicks &nbsp;<img
+          class="github-svg"
+          src="images/github-mark-white.svg"
+        /></p
+    ></a>
     <script src="./scripts.js"></script>
-</body>
+  </body>
 </html>

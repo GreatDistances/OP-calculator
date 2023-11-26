@@ -1,220 +1,216 @@
+// DOM elements
+
+const numButtons = document.querySelectorAll(".num");
+const screen = document.querySelector(".screen");
+const screenCurrent = document.querySelector(".screen-current");
+const screenPrevious = document.querySelector(".screen-previous");
+const operators = document.querySelectorAll(".op");
+const equals = document.querySelector(".equals");
+const ac = document.querySelector(".ac");
+const negative = document.querySelector(".negative");
+const c = document.querySelector(".c");
+const backspace = document.querySelector(".backspace");
+
+// global variables
+let currentNum = 0;
+let prevNum = 0;
+let currentNumDisplay = "";
+let prevNumDisplay = "";
+let currentOp = "";
+let prevOp = "";
+let lastKeyed = "";
+screenPrevious.textContent = "";
+
+const clearAll = () => {
+  currentNum = 0;
+  prevNum = 0;
+  currentOp = "";
+  prevOp = "";
+  lastKeyed = "";
+  screenCurrent.textContent = currentNum;
+  screenPrevious.textContent = "";
+};
+
+clearAll(); // reset calculator on load
+
+numButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    console.log(button.innerText);
+    let entry = button.innerText;
+    lastKeyed = "num";
+    appendCurrentNumDisplay(entry);
+  });
+});
+
+operators.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentOp = button.innerText;
+    console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+    console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+    // first calculation acts differently from subsequent calculations
+    if (prevOp === "") {
+      prevNum = currentNum;
+      updatePrevNumDisplay(currentNum, currentOp);
+      currentNum = 0;
+      updateCurrentNumDisplay(currentNum);
+      prevOp = currentOp;
+      // allows switching of operator
+    } else if (lastKeyed === "op") {
+      prevOp = currentOp;
+      currentOp = button.innerText;
+      updatePrevNumDisplay(prevNum, currentOp);
+      return;
+      // regular calculations after first entry
+    } else {
+      calculate(currentNum, prevOp, prevNum);
+      updatePrevNumDisplay(prevNum, currentOp);
+      updateCurrentNumDisplay(currentNum);
+      prevOp = currentOp;
+    }
+    lastKeyed = "op";
+  });
+});
+
+equals.addEventListener("click", () => {
+  console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+  console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+  calculate(currentNum, prevOp, prevNum);
+  currentNum = prevNum;
+  prevNum = 0;
+  updateCurrentNumDisplay(limitDigits(currentNum));
+  lastKeyed = "equals";
+  currentOp = "";
+  prevOp = "";
+  lastKeyed = "equals";
+  screenPrevious.textContent = "";
+  console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+  console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+});
+
+backspace.addEventListener("click", () => {
+  deleteOneChar();
+  lastKeyed = "num";
+});
+
+ac.addEventListener("click", () => {
+  screenCurrent.style.color = "#EEE";
+  clearAll();
+});
+
+c.addEventListener("click", () => {
+  currentNum = 0;
+  updateCurrentNumDisplay(currentNum);
+});
+
+const appendCurrentNumDisplay = (num) => {
+  if (parseInt(num) === 0 && currentNum === 0) {
+    return;
+  } else if (currentNum === 0) {
+    currentNum = num;
+  } else if (num === "." && currentNum.includes(".")) {
+    return;
+  } else if (currentNum.length < 10) {
+    currentNum = currentNum + num;
+  }
+  updateCurrentNumDisplay(currentNum);
+};
+
+const updateCurrentNumDisplay = (num) => {
+  screenCurrent.textContent = num;
+};
+
+const updatePrevNumDisplay = (num, op) => {
+  screenPrevious.textContent = `${num} ${op}`;
+};
+
+const calculate = (current, op, prev) => {
+  switch (op) {
+    case "+":
+      prevNum =
+        prev === null
+          ? current
+          : addFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "-":
+      prevNum =
+        prev === null
+          ? current
+          : subtractFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "x":
+      prevNum =
+        prev === null
+          ? current
+          : multiplyFunc(parseFloat(prev), parseFloat(current));
+      break;
+    case "/":
+      prevNum =
+        prev === null
+          ? current
+          : divideFunc(parseFloat(prev), parseFloat(current));
+      break;
+    default:
+      return;
+  }
+    currentNum = 0;
+};
+
 // basic math functions
 const addFunc = (a, b) => a + b;
 const subtractFunc = (a, b) => a - b;
 const multiplyFunc = (a, b) => a * b;
-const divideFunc = (a, b) => a / b;
-
-console.log(addFunc(6, 2));
-console.log(subtractFunc(6, 2));
-console.log(multiplyFunc(6, 2));
-console.log(divideFunc(6, 2));
-
-// operate function
-const operate = (a, b, op) => {
-  return op === "+"
-    ? addFunc(a, b)
-    : op === "-"
-    ? subtractFunc(a, b)
-    : op === "*"
-    ? multiplyFunc(a, b)
-    : op === "/"
-    ? divideFunc(a, b)
-    : "error";
+const divideFunc = (a, b) => {
+  if (b === 0) {
+    screenCurrent.style.color = "#cd3f32";
+    return NaN;
+  }
+  return a / b;
 };
 
-console.log(operate(6, 2, "+"));
-console.log(operate(6, 2, "-"));
-console.log(operate(6, 2, "*"));
-console.log(operate(6, 2, "/"));
-console.log(operate(6, 2, "asdf934"));
-
-// DOM elements
-const screen = document.querySelector(".screen");
-const one = document.querySelector(".one");
-const two = document.querySelector(".two");
-const three = document.querySelector(".three");
-const four = document.querySelector(".four");
-const five = document.querySelector(".five");
-const six = document.querySelector(".six");
-const seven = document.querySelector(".seven");
-const eight = document.querySelector(".eight");
-const nine = document.querySelector(".nine");
-const zero = document.querySelector(".zero");
-const zeroZero = document.querySelector(".zeroZero");
-const decimal = document.querySelector(".decimal");
-const plus = document.querySelector(".plus");
-const minus = document.querySelector(".minus");
-const multiplier = document.querySelector(".multiplier");
-const divider = document.querySelector(".divider");
-const ac = document.querySelector(".ac");
-const equals = document.querySelector(".equals");
-
-// screen display variable
-let onScreen = "0";
-let numsArr = [];
-screen.textContent = onScreen;
-
-ac.addEventListener("click", () => {
-  numsArr = [];
-  onScreen = "0";
-  screen.textContent = onScreen;
-  console.log(numsArr);
+negative.addEventListener("click", () => {
+  currentNum = parseFloat(currentNum) * -1;
+  updateCurrentNumDisplay(currentNum);
 });
 
-one.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "1";
+const deleteOneChar = () => {
+  // convert currentNum to string
+  let currentNumAsString = currentNum.toString();
+  // if currentNum is 0, return.
+  if (currentNum === 0) {
+    return;
+    // if currentNum is only one character long, currentNum becomes 0.
+  } else if (currentNumAsString.length === 1) {
+    currentNum = 0;
   } else {
-    onScreen = onScreen + "1";
+    // remove last char from currentNum
+    currentNum = currentNumAsString.slice(0, -1);
   }
-  screen.textContent = onScreen;
-});
+  updateCurrentNumDisplay(currentNum);
+};
 
-two.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "2";
-  } else {
-    onScreen = onScreen + "2";
-  }
-  screen.textContent = onScreen;
-});
-three.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "3";
-  } else {
-    onScreen = onScreen + "3";
-  }
-  screen.textContent = onScreen;
-});
-four.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "4";
-  } else {
-    onScreen = onScreen + "4";
-  }
-  screen.textContent = onScreen;
-});
-five.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "5";
-  } else {
-    onScreen = onScreen + "5";
-  }
-  screen.textContent = onScreen;
-});
-six.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "6";
-  } else {
-    onScreen = onScreen + "6";
-  }
-  screen.textContent = onScreen;
-});
-seven.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "7";
-  } else {
-    onScreen = onScreen + "7";
-  }
-  screen.textContent = onScreen;
-});
-eight.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "8";
-  } else {
-    onScreen = onScreen + "8";
-  }
-  screen.textContent = onScreen;
-});
-nine.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "9";
-  } else {
-    onScreen = onScreen + "9";
-  }
-  screen.textContent = onScreen;
-});
-zero.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "0";
-  } else {
-    onScreen = onScreen + "0";
-  }
-  screen.textContent = onScreen;
-});
-zeroZero.addEventListener("click", () => {
-  if (onScreen == "0") {
-    onScreen = "0";
-  } else {
-    onScreen = onScreen + "00";
-  }
-  screen.textContent = onScreen;
-});
-decimal.addEventListener("click", () => {
-  if (onScreen.indexOf(".") === -1) {
-    onScreen = onScreen + ".";
-    screen.textContent = onScreen;
-  }
-});
+const limitDigits = (num) => {
+  const roundedNum = Number(num.toFixed(11)); // Round to 11 decimal places
 
-plus.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "+");
-  screen.textContent = String(currentNum) + "+";
-  console.log(numsArr);
-  onScreen = "";
-});
-minus.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "-");
-  screen.textContent = String(currentNum) + "-";
-  console.log(numsArr);
-  onScreen = "";
-});
-multiplier.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "*");
-  screen.textContent = String(currentNum) + "*";
-  console.log(numsArr);
-  onScreen = "";
-});
-divider.addEventListener("click", () => {
-  console.log(onScreen);
-  currentNum = Number(onScreen);
-  numsArr.push(currentNum, "/");
-  screen.textContent = String(currentNum) + "/";
-  console.log(numsArr);
-  onScreen = "";
-});
+  if (Number.isInteger(roundedNum)) {
+    return roundedNum.toString(); // Convert to string without decimal places
+  } else {
+    const numString = roundedNum.toString();
+    let truncatedNum;
 
-equals.addEventListener("click", () => {
-  numsArr.push(Number(onScreen));
-
-  // TO DO loop over array, perform calculations
-  let total = Number(numsArr.shift());
-  console.log(`${total}, ${numsArr}`);
-  while (numsArr.length > 1) {
-    const operatorsRegex = /[+\-*/]/;
-    if (operatorsRegex.test(numsArr[numsArr.length - 1])) {
-      numsArr.pop();
-      console.log(numsArr);
+    // Check the length of the number string
+    if (numString.length > 12) {
+      // If the number has more than 12 digits, truncate it
+      if (numString.charAt(0) === "-") {
+        truncatedNum = Number(numString.slice(0, 13)); // lets negative sign be added to string as 13th char without adjusting length of number displayed
+      } else {
+        truncatedNum = Number(numString.slice(0, 12)); // if is not negative, 12 chars returned
+      }
+      return truncatedNum.toString();
+    } else {
+      // If the number has 12 or fewer digits, return the original number string
+      return numString;
     }
-
-    if (numsArr[0] === "+") {
-      total = total + numsArr[1];
-    } else if (numsArr[0] === "-") {
-      total -= numsArr[1];
-    } else if (numsArr[0] === "*") {
-      total *= numsArr[1];
-    } else if (numsArr[0] === "/") {
-      total /= numsArr[1];
-    }
-    numsArr.splice(0, 2);
   }
-  onScreen = total;
-  console.log(`grand total: ${total}, numsArr ${numsArr}`);
-  screen.textContent = `= ${total.toFixed(10)}`; 
-});
+};
+
+// operate function
