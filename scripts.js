@@ -1,6 +1,7 @@
 // DOM elements
 
 const numButtons = document.querySelectorAll(".num");
+const screen = document.querySelector(".screen");
 const screenCurrent = document.querySelector(".screen-current");
 const screenPrevious = document.querySelector(".screen-previous");
 const operators = document.querySelectorAll(".op");
@@ -18,6 +19,7 @@ let prevNumDisplay = "";
 let currentOp = "";
 let prevOp = "";
 let lastKeyed = "";
+screenPrevious.textContent = "";
 
 const clearAll = () => {
   currentNum = 0;
@@ -26,7 +28,7 @@ const clearAll = () => {
   prevOp = "";
   lastKeyed = "";
   screenCurrent.textContent = currentNum;
-  screenPrevious.textContent = prevNum;
+  screenPrevious.textContent = "";
 };
 
 clearAll(); // reset calculator on load
@@ -49,8 +51,8 @@ operators.forEach((button) => {
     if (prevOp === "") {
       prevNum = currentNum;
       updatePrevNumDisplay(currentNum, currentOp);
-      updateCurrentNumDisplay(currentNum);
       currentNum = 0;
+      updateCurrentNumDisplay(currentNum);
       prevOp = currentOp;
       // allows switching of operator
     } else if (lastKeyed === "op") {
@@ -58,6 +60,7 @@ operators.forEach((button) => {
       currentOp = button.innerText;
       updatePrevNumDisplay(prevNum, currentOp);
       return;
+      // regular calculations after first entry
     } else {
       calculate(currentNum, prevOp, prevNum);
       updatePrevNumDisplay(prevNum, currentOp);
@@ -68,21 +71,45 @@ operators.forEach((button) => {
   });
 });
 
+equals.addEventListener("click", () => {
+  console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+  console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+  calculate(currentNum, prevOp, prevNum);
+  currentNum = prevNum;
+  prevNum = 0;
+  updateCurrentNumDisplay(limitDigits(currentNum));
+  lastKeyed = "equals";
+  currentOp = "";
+  prevOp = "";
+  lastKeyed = "equals";
+  screenPrevious.textContent = "";
+  console.log(`currentNum: ${currentNum}, prevNum: ${prevNum}`);
+  console.log(`currentOp: ${currentOp}, prevOp: ${prevOp}`);
+});
+
 backspace.addEventListener("click", () => {
   deleteOneChar();
   lastKeyed = "num";
 });
 
 ac.addEventListener("click", () => {
+  screenCurrent.style.color = "#EEE";
   clearAll();
 });
 
+c.addEventListener("click", () => {
+  currentNum = 0;
+  updateCurrentNumDisplay(currentNum);
+});
+
 const appendCurrentNumDisplay = (num) => {
-  if (currentNum === 0) {
+  if (parseInt(num) === 0 && currentNum === 0) {
+    return;
+  } else if (currentNum === 0) {
     currentNum = num;
   } else if (num === "." && currentNum.includes(".")) {
     return;
-  } else {
+  } else if (currentNum.length < 10) {
     currentNum = currentNum + num;
   }
   updateCurrentNumDisplay(currentNum);
@@ -125,7 +152,7 @@ const calculate = (current, op, prev) => {
     default:
       return;
   }
-  currentNum = 0;
+    currentNum = 0;
 };
 
 // basic math functions
@@ -134,8 +161,7 @@ const subtractFunc = (a, b) => a - b;
 const multiplyFunc = (a, b) => a * b;
 const divideFunc = (a, b) => {
   if (b === 0) {
-    ac.style.backgroundColor = "#cd3f32";
-    screen.style.border = "5px solid #cd3f32";
+    screenCurrent.style.color = "#cd3f32";
     return NaN;
   }
   return a / b;

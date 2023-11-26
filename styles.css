@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -7,7 +9,7 @@
 body {
     height: 100vh;
     background-image: linear-gradient(#cd3299, #6632cd);
-    font-family: Trirong, sans-serif;
+    font-family: Rubik, sans-serif;
     padding: 2em;
 }
 
@@ -15,7 +17,7 @@ body {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-auto-rows: minmax(50px, auto);
+    grid-auto-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
     column-gap: 11px;
     row-gap: 11px;
     width: 440px; /* smartphone max width */
@@ -23,15 +25,15 @@ body {
     border: 2px solid grey;
     border-radius: 10px;
     padding: 30px;
-    background-image: linear-gradient(0deg,#DDD, #FFF);
+    background-image: linear-gradient(0deg,#DDD, #EEE);
     box-shadow: 10px 10px 20px #333;
     grid-template-areas:
         "screen screen screen screen screen screen"
         "screen screen screen screen screen screen"
-        "ac seven eight nine percentage ."
-        "negative four five six multiplier divider"
-        "backspace one two three plus minus"
-        "c zero zeroZero decimal plus equals";
+        "ac seven eight nine solarPanel solarPanel"
+        "c four five six multiplier divider"
+        "negative one two three plus minus"
+        "backspace zero zeroZero decimal plus equals";
 }
 
 .calc-container > .btn {
@@ -39,11 +41,10 @@ body {
     align-items: center;
     justify-content: center;
     color: #222;
-
-    font-weight: bold;
     border-radius: 5px;
     box-shadow: 2px 2px 2px #555555;
     user-select: none;
+    font-size: 23px;
 }
 
 .calc-container > .btn:hover {
@@ -61,14 +62,12 @@ body {
     grid-template-columns: 1fr;
     align-items: center;
     justify-content: flex-end;
-    padding-right: 10px;
+    padding: 0px 20px 8px;
     margin-bottom: 10px;
     background-image: linear-gradient(#222, #444);
     grid-area: screen;
     border: 2px solid #222;
     border-radius: 5px;
-    height: 120px;
-    font-size: 40px;
     color: #EEE;
     box-shadow: inset 0px 0px 5px 0px #AAA;
 }
@@ -78,13 +77,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding-right: 20px;
-    font-size: 40px;
+
+    font-size: 45px;
     color: #EEE;
 }
 
 .screen-previous {
-    font-size: 15px;
+    font-size: 22px;
 }
 
 .num {
@@ -92,18 +91,20 @@ body {
     font-size: 22px;
 }
 
-.op {
+.op, .backspace, .equals, .negative  {
     background-color: #888;
     font-size: 22px;
 }
 
 .ac {
     grid-area: ac;
-    background-color: #cd8c32;
+    background-color: #cd3f32;
     font-size: 22px;
 }
 .c {
     grid-area: c;
+    background-color: #cd8c32;
+    font-size: 22px;
 }
 
 .plus {
@@ -181,4 +182,23 @@ body {
 
 .footer-link {
     text-decoration: none;
+}
+
+.solar-panel::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ccc, transparent);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.solar-panel {
+    grid-area: solarPanel;
+    background-image: linear-gradient(#222, #444);
+    border-radius: 5px;
+    position: relative; /* Ensure the ::before pseudo-element is positioned relative to this container */
+    box-shadow: inset 0px 0px 5px 0px #AAA;
 }
